@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 
 
 
-export default function MainPage({setAuthtoken}){
+export default function MainPage({setAuthtoken, setUserName}){
     let email = ""
     let password = ""
     const navigate = useNavigate()
@@ -24,17 +24,20 @@ export default function MainPage({setAuthtoken}){
             
     }
     function Redirect(res) {
-        setAuthtoken(res.data)
+        setAuthtoken(res.data.authtoken)
+        setUserName(res.data.user)
         console.log(res.data)
         navigate("/home")
     }
+    function RedirectCadastro(){navigate("/cadastro")}
+
     return (
     <Main>
         <Logo>MyWallet</Logo>
         <Input type="text" placeholder="E-mail" onChange={guardarEmail}/>
         <Input type="password" placeholder="Senha" onChange={guardarSenha}/>
         <Botao onClick={Conectar}>Entrar</Botao>
-        <Cadastrar><span>Primeira vez? Cadastre-se!</span></Cadastrar>
+        <Cadastrar onClick={RedirectCadastro}><span>Primeira vez? Cadastre-se!</span></Cadastrar>
     </Main>
     )
 }

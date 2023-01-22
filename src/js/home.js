@@ -5,26 +5,18 @@ import React from "react"
 import { useNavigate } from "react-router-dom"
 
 
-
-
-export default function Home({authtoken}){
-    const [userName, setUsername] = React.useState("Fulano")
+export default function Home({authtoken, user}){
     const [walletInfo, setWalletInfo] = React.useState(undefined)
     const navigate = useNavigate()
-    const IonStyle = {
-        fontSize: 30
-    }
-    //let authtoken = "562b760b-ecaa-4e73-8cea-90c675682c35"
-
-
+    const IonStyle = {fontSize: 30}
+    let totalmovimentado = 0
+    
     useEffect(() => {        
         const config = {headers:{authtoken: authtoken}}
         console.log(config)
 		const request = axios.get("http://localhost:5000/home", config)
 		request.then(resposta => {  
 		    setWalletInfo(resposta.data);
-            setUsername(resposta.data)
-            
         });
 	}, []);
     
@@ -35,7 +27,7 @@ export default function Home({authtoken}){
     if(walletInfo.length === 0){
         return (
         <Main>
-            <PageTitle><span>Olá, Fulano</span><ion-icon name="exit-outline" style={IonStyle}></ion-icon></PageTitle>
+            <PageTitle><span>Olá, {user}</span><ion-icon name="exit-outline" style={IonStyle}></ion-icon></PageTitle>
             <DivWallet2>
                 <p>Não há registros de entrada ou saída.</p>
             </DivWallet2>
@@ -48,11 +40,17 @@ export default function Home({authtoken}){
 
     function RedirectEntrada() {navigate("/nova-entrada")}
     function RedirectSaida() {navigate("/nova-saida")}
-    function Logout() {window.location.href = "http://localhost:3000/"}
+    function FazerLogout() {window.location.href = "http://localhost:3000/"}
+
+    totalmovimentado = walletInfo.reduce((Somatorio, walletInfo) => {
+        return walletInfo.op === 'entry' ? Somatorio + parseFloat(walletInfo.value) : Somatorio - parseFloat(walletInfo.value)}, 0)
+    console.log(totalmovimentado)
+    totalmovimentado = (Math.round(totalmovimentado * 100) / 100).toFixed(2)
+    console.log(totalmovimentado)
     
     return (
         <Main>
-            <PageTitle><span>Olá, Fulano</span><ion-icon name="exit-outline" style={IonStyle} onClick={Logout}></ion-icon></PageTitle>
+            <PageTitle><span>Olá, {user}</span><ion-icon name="exit-outline" style={IonStyle} onClick={FazerLogout}></ion-icon></PageTitle>
             <DivWallet>
                 <DivItens>
                     {walletInfo.map(props => {
@@ -68,7 +66,7 @@ export default function Home({authtoken}){
                 </DivItens>                
                 <Saldo>
                     <PalavraSaldo>SALDO</PalavraSaldo>
-                    <SaldoTotal>0</SaldoTotal>
+                    <SaldoTotal color={totalmovimentado}>{totalmovimentado}</SaldoTotal>
                 </Saldo>
             </DivWallet>
             <DivBotoes>
@@ -166,6 +164,7 @@ font-size: 17px;
 font-weight: bold;
 font-family: 'Raleway', sans-serif;
 padding-right: 25px;
+color:${props => props.color < 0 ? "#C70000" : "#03AC00"};
 `
 const DataWallet = styled.p`
 font-size: 16px;

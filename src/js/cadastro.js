@@ -34,7 +34,7 @@ export default function Cadastro(){
         <Input type="password" placeholder="Senha" onChange={SavePass}/>
         <Input type="password" placeholder="Confirme a Senha" onChange={ConfirmPass}/>
         <Botao onClick={Enviar}>Cadastrar</Botao>
-        <EntreAgora><span>Já tem uma conta? Entre agora!</span></EntreAgora>
+        <EntreAgora onClick={Redirect}><span>Já tem uma conta? Entre agora!</span></EntreAgora>
     </Main>
     )
 }
