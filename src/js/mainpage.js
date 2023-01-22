@@ -1,14 +1,39 @@
 import React from "react"
 import styled from "styled-components"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 
-export default function MainPage(){
+
+export default function MainPage({setAuthtoken}){
+    let email = ""
+    let password = ""
+    const navigate = useNavigate()
+
+    function guardarSenha(event) {
+        password = event.target.value
+    }
+    function guardarEmail(event) {
+        email = event.target.value
+    }
+    function Conectar() {
+        let Envio = {email, password}
+        const request = axios.post("http://localhost:5000/", Envio)
+            .then(res => Redirect(res))
+            .catch(err => console.log(err))
+            
+    }
+    function Redirect(res) {
+        setAuthtoken(res.data)
+        console.log(res.data)
+        navigate("/home")
+    }
     return (
     <Main>
         <Logo>MyWallet</Logo>
-        <Input placeholder="E-mail"/>
-        <Input placeholder="Senha"/>
-        <Botao>Entrar</Botao>
+        <Input type="text" placeholder="E-mail" onChange={guardarEmail}/>
+        <Input type="password" placeholder="Senha" onChange={guardarSenha}/>
+        <Botao onClick={Conectar}>Entrar</Botao>
         <Cadastrar><span>Primeira vez? Cadastre-se!</span></Cadastrar>
     </Main>
     )

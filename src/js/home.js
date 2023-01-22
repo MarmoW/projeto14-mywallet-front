@@ -1,34 +1,79 @@
-import React from "react"
+import {useState, useEffect} from "react"
 import styled from "styled-components"
+import axios from "axios"
+import React from "react"
+import { useNavigate } from "react-router-dom"
 
-export default function Home(){
-    const array = [{data: "05/12",descricao: "AAAAAAAAAAA",valor: "10,20"},{data: "05/12",descricao: "BBBBBBBBBBBB",valor: "20,30"}]
+
+
+
+export default function Home({authtoken}){
+    const [userName, setUsername] = React.useState("Fulano")
+    const [walletInfo, setWalletInfo] = React.useState(undefined)
+    const navigate = useNavigate()
+    const IonStyle = {
+        fontSize: 30
+    }
+    //let authtoken = "562b760b-ecaa-4e73-8cea-90c675682c35"
+
+
+    useEffect(() => {        
+        const config = {headers:{authtoken: authtoken}}
+        console.log(config)
+		const request = axios.get("http://localhost:5000/home", config)
+		request.then(resposta => {  
+		    setWalletInfo(resposta.data);
+            setUsername(resposta.data)
+            
+        });
+	}, []);
     
+    if(walletInfo === undefined){
+        return (console.log("aqui", walletInfo))
+    }
+
+    if(walletInfo.length === 0){
+        return (
+        <Main>
+            <PageTitle><span>Olá, Fulano</span><ion-icon name="exit-outline" style={IonStyle}></ion-icon></PageTitle>
+            <DivWallet2>
+                <p>Não há registros de entrada ou saída.</p>
+            </DivWallet2>
+            <DivBotoes>
+                <Botoes onClick={RedirectEntrada}><ion-icon name="add-circle-outline" style={IonStyle}></ion-icon><p>Nova entrada</p></Botoes>
+                <Botoes onClick={RedirectSaida}><ion-icon name="remove-circle-outline" style={IonStyle}></ion-icon><div>Nova saída</div></Botoes>
+            </DivBotoes>
+        </Main>)
+    }
+
+    function RedirectEntrada() {navigate("/nova-entrada")}
+    function RedirectSaida() {navigate("/nova-saida")}
+    function Logout() {window.location.href = "http://localhost:3000/"}
     
     return (
         <Main>
-            <PageTitle><span>Olá, Fulano</span></PageTitle>
+            <PageTitle><span>Olá, Fulano</span><ion-icon name="exit-outline" style={IonStyle} onClick={Logout}></ion-icon></PageTitle>
             <DivWallet>
                 <DivItens>
-                    {array.map((infos) => {
+                    {walletInfo.map(props => {
                         return(
-                            <ItensWallet>
-                                <DataWallet>{infos.data}</DataWallet>
+                            <ItensWallet key={props.id_}>
+                                <DataWallet >{props.data}</DataWallet>
                                 <DivFormatar>
-                                    <DescricaoWallet>{infos.descricao}</DescricaoWallet>
-                                    <ValorWallet>{infos.valor}</ValorWallet>
+                                    <DescricaoWallet>{props.name}</DescricaoWallet>
+                                    <ValorWallet cor={props.op}>{props.value}</ValorWallet>
                                 </DivFormatar>
                             </ItensWallet>)
                     })}
                 </DivItens>                
                 <Saldo>
                     <PalavraSaldo>SALDO</PalavraSaldo>
-                    <SaldoTotal>600 conto</SaldoTotal>
+                    <SaldoTotal>0</SaldoTotal>
                 </Saldo>
             </DivWallet>
             <DivBotoes>
-                <Botoes><p>+</p><p>Nova entrada</p></Botoes>
-                <Botoes><div>-</div><div>Nova saída</div></Botoes>
+                <Botoes onClick={RedirectEntrada}><ion-icon name="add-circle-outline" style={IonStyle}></ion-icon><p>Nova entrada</p></Botoes>
+                <Botoes onClick={RedirectSaida}><ion-icon name="remove-circle-outline" style={IonStyle}></ion-icon><div>Nova saída</div></Botoes>
             </DivBotoes>
         </Main>
     )
@@ -44,7 +89,7 @@ color: #ffffff;
 font-size: 26px;
 font-weight: bold;
 margin-bottom: 40px;
-
+justify-content: space-between;
 `
 const Main = styled.div `
 display: flex;
@@ -142,7 +187,9 @@ display: flex;
 font-size: 16px;
 font-weight: normal;
 font-family: 'Raleway', sans-serif;
-color: #C70000;
+color: ${props => 
+    {if(props.cor === "entry"){return "#03AC00"}
+    else{return "#C70000"}}};
 margin-right: 10px;
 `
 const DivFormatar = styled.div`
@@ -164,4 +211,21 @@ box-sizing: border-box;
 overflow: hidden;
 overflow-y:scroll;
 
+`
+const DivWallet2 = styled.div`
+position: relative;
+display: flex;
+height: 446px;
+width: 326px;
+border-radius: 5px;
+background-color: #ffffff;
+padding-top: 200px;
+padding-left: 73px;
+padding-right: 73px;
+box-sizing: border-box;
+overflow: hidden;
+overflow-y:scroll;
+font-family: 'Raleway', sans-serif;
+font-size: 20px;
+color: #868686;
 `

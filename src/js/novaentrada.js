@@ -1,17 +1,38 @@
 import React from "react"
 import styled from "styled-components"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
-export default function NovaEntrada(){
+export default function NovaEntrada({authtoken}){
+    let valor = 0
+    let descricao = ""
+    const navigate = useNavigate();
+    const config = {headers:{authtoken: authtoken}}
+
+    function guardarValores(event) {
+        valor = (Math.round(event.target.value * 100) / 100).toFixed(2);//event.target.value
+    }
+    function guardarDescricao(event) {
+        descricao = event.target.value
+    }
+    function Enviar(){
+        let Envio = {value: valor, description: descricao}
+        const config = {headers:{authtoken: authtoken}}
+        const request = axios.post("http://localhost:5000/nova-entrada", Envio ,config)
+            .then(console.log("Enviado com sucesso"))
+            .catch(err => console.log(err))
+            navigate("/home")
+    }
+
     return (
     <Main>
         <PageTitle>Nova entrada</PageTitle>
-        <Input placeholder="Valor"/>
-        <Input placeholder="Descrição"/>
-        <Botao>Salvar entrada</Botao>
+        <Input type="number" placeholder="Valor" onChange={guardarValores}/>
+        <Input type="text" placeholder="Descrição" onChange={guardarDescricao}/>
+        <Botao onClick={Enviar}>Salvar entrada</Botao>
     </Main>
     )
 }
-
 
 
 const PageTitle = styled.div`

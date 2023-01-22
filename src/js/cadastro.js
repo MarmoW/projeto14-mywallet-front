@@ -1,15 +1,39 @@
 import React from "react"
 import styled from "styled-components"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
+
 
 export default function Cadastro(){
+    let name = ""
+    let email = ""
+    let pass = ""
+    let confirm = ""
+    const navigate = useNavigate();
+    
+    function SaveName(event){ name = event.target.value}
+    function SaveEmail(event){ email = event.target.value}
+    function SavePass(event){ pass = event.target.value}
+    function ConfirmPass(event){ confirm = event.target.value}
+
+    function Enviar(){
+        let Envio = {user: name, email: email, password: pass, confirmPassword: confirm}
+        const request = axios.post("http://localhost:5000/cadastro", Envio)
+            .then(res => Redirect(res))
+            .catch(err => console.log(err))
+    }
+
+    function Redirect(res) {
+        navigate("/")
+    }
     return (
     <Main>
         <Logo>MyWallet</Logo>
-        <Input placeholder="Nome"/>
-        <Input placeholder="E-mail"/>
-        <Input placeholder="Senha"/>
-        <Input placeholder="Confirme a Senha"/>
-        <Botao>Cadastrar</Botao>
+        <Input type="text" placeholder="Nome" onChange={SaveName}/>
+        <Input type="email" placeholder="E-mail" onChange={SaveEmail}/>
+        <Input type="password" placeholder="Senha" onChange={SavePass}/>
+        <Input type="password" placeholder="Confirme a Senha" onChange={ConfirmPass}/>
+        <Botao onClick={Enviar}>Cadastrar</Botao>
         <EntreAgora><span>Já tem uma conta? Entre agora!</span></EntreAgora>
     </Main>
     )
