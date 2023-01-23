@@ -18,7 +18,7 @@ export default function Cadastro(){
 
     function Enviar(){
         let Envio = {user: name, email: email, password: pass, confirmPassword: confirm}
-        const request = axios.post("http://localhost:5000/cadastro", Envio)
+        const request = axios.post(`${process.env.REACT_APP_API_URL}/cadastro`, Envio)
             .then(res => Redirect(res))
             .catch(err => console.log(err))
     }

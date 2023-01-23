@@ -18,7 +18,7 @@ export default function MainPage({setAuthtoken, setUserName}){
     }
     function Conectar() {
         let Envio = {email, password}
-        const request = axios.post("http://localhost:5000/", Envio)
+        const request = axios.post(`${process.env.REACT_APP_API_URL}/`, Envio)
             .then(res => Redirect(res))
             .catch(err => console.log(err))
             

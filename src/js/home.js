@@ -14,7 +14,7 @@ export default function Home({authtoken, user}){
     useEffect(() => {        
         const config = {headers:{authtoken: authtoken}}
         console.log(config)
-		const request = axios.get("http://localhost:5000/home", config)
+		const request = axios.get(`${process.env.REACT_APP_API_URL}/home`, config)
 		request.then(resposta => {  
 		    setWalletInfo(resposta.data);
         });
@@ -44,7 +44,6 @@ export default function Home({authtoken, user}){
 
     totalmovimentado = walletInfo.reduce((Somatorio, walletInfo) => {
         return walletInfo.op === 'entry' ? Somatorio + parseFloat(walletInfo.value) : Somatorio - parseFloat(walletInfo.value)}, 0)
-    console.log(totalmovimentado)
     totalmovimentado = (Math.round(totalmovimentado * 100) / 100).toFixed(2)
     console.log(totalmovimentado)
     

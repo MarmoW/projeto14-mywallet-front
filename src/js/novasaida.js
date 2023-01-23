@@ -18,7 +18,7 @@ export default function NovaSaida({authtoken}){
     function Enviar(){
         let Envio = {value: valor, description: descricao}
         const config = {headers:{authtoken: authtoken}}
-        const request = axios.post("http://localhost:5000/nova-saida", Envio ,config)
+        const request = axios.post(`${process.env.REACT_APP_API_URL}/nova-saida`, Envio ,config)
             .then(console.log("Enviado com sucesso"))
             .catch(err => console.log(err))
            navigate("/home")
