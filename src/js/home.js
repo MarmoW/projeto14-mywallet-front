@@ -27,7 +27,7 @@ export default function Home({authtoken, user}){
     if(walletInfo.length === 0){
         return (
         <Main>
-            <PageTitle><span>Olá, {user}</span><ion-icon name="exit-outline" style={IonStyle}></ion-icon></PageTitle>
+            <PageTitle><span>Olá, {user}</span><ion-icon name="exit-outline" style={IonStyle} onClick={FazerLogout}></ion-icon></PageTitle>
             <DivWallet2>
                 <p>Não há registros de entrada ou saída.</p>
             </DivWallet2>

@@ -4,8 +4,8 @@ import axios from "axios"
 import { useNavigate } from "react-router-dom"
 
 export default function NovaEntrada({authtoken}){
-    let valor = 0
-    let descricao = ""
+    let valor = undefined
+    let descricao = undefined
     const navigate = useNavigate();
     const config = {headers:{authtoken: authtoken}}
 
@@ -18,8 +18,8 @@ export default function NovaEntrada({authtoken}){
     
 
     function Enviar(){
-        if(valor === 0) {return console.log("Valor não pode ser 0")}
-        if(descricao === ""){return console.log("Descrição não pode ficar em branco")}
+        //if(valor === 0) {return console.log("Valor não pode ser 0")}
+        //if(descricao === ""){return console.log("Descrição não pode ficar em branco")}
         let Envio = {value: valor, description: descricao}
         const config = {headers:{authtoken: authtoken}}
         const request = axios.post(`${process.env.REACT_APP_API_URL}/nova-entrada`, Envio ,config)
