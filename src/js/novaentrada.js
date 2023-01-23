@@ -15,7 +15,11 @@ export default function NovaEntrada({authtoken}){
     function guardarDescricao(event) {
         descricao = event.target.value
     }
+    
+
     function Enviar(){
+        if(valor === 0) {return console.log("Valor não pode ser 0")}
+        if(descricao === ""){return console.log("Descrição não pode ficar em branco")}
         let Envio = {value: valor, description: descricao}
         const config = {headers:{authtoken: authtoken}}
         const request = axios.post(`${process.env.REACT_APP_API_URL}/nova-entrada`, Envio ,config)
